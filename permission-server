@@ -1,0 +1,16 @@
+#!/bin/bash
+
+. /etc/aisheescript/scripts.conf
+
+printf "=========================================================================\n"
+printf "                          Set permission WebServer\n"
+printf "=========================================================================\n"
+printf "Whenever upload files with sFTP, you can set permission Nginx webserver\n"
+printf "in folder /home/, website is running,\n"
+printf "cai dat duoc theme/plugin.\n\n"
+
+chown -R nginx:nginx /home/*/public_html
+chown -R nginx:nginx /home/*/private_html
+echo -n "Set permission webserver complete!"
+
+exit

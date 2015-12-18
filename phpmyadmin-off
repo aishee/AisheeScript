@@ -1,0 +1,48 @@
+#!/bin/bash
+
+. /etc/aisheescript/scripts.conf
+
+if [ -f /home/$mainsite/private_html/index.php ]; then
+printf "=========================================================================\n"
+printf "                             Turn Off phpMyAdmin\n"
+printf "=========================================================================\n"
+printf "phpMyAdmin is on, see $priport to access.\n\n"
+read -r -p "You want turn off ? [y/N] " response
+case $response in
+    [yY][eE][sS]|[yY])
+	mv /home/$mainsite/private_html/index.php /home/$mainsite/private_html/index.bak
+	service php-fpm restart
+
+	rm -f /home/$mainsite/private_html/index.html
+    cat > "/home/$mainsite/private_html/index.html" <<END
+<html>
+<head><title>403 Forbidden</title></head>
+<body bgcolor="white">
+<center><h1>403 Forbidden</h1></center>
+<hr><center>aishee.net</center>
+</body>
+</html>
+END
+
+	echo "phpmyadmin is turn off !"
+        ;;
+    *)
+        echo "Good bye....!"
+        ;;
+esac
+exit
+fi
+echo "phpMyAdmin is turn off !!!"
+read -r -p "You want turn on ? [y/N] " response
+case $response in
+    [yY][eE][sS]|[yY])
+	mv /home/$mainsite/private_html/index.bak /home/$mainsite/private_html/index.php
+	rm -f /home/$mainsite/private_html/index.html
+	service php-fpm restart
+
+	echo "phpMyAdmin is turn on !"
+        ;;
+    *)
+        echo "Good bye....!"
+        ;;
+esac

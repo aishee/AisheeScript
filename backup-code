@@ -1,0 +1,47 @@
+#!/bin/bash
+
+. /etc/aisheescript/scripts.conf
+
+backupcode()
+{
+	echo "Please wait, backup is runing...."
+	cd /home/$website/public_html/
+	tar czf $website.tar.gz *
+
+	mkdir -p /home/$mainsite/private_html/backup/$website/
+	mv $website.tar.gz /home/$mainsite/private_html/backup/$website/$website.tar.gz
+
+	echo "Backup website $website complete..."
+	echo "Link file backup: /home/$mainsite/private_html/backup/$website/$website.tar.gz"
+	echo "Link download: http://$mainsite:$priport/backup/$website/$website.tar.gz"
+}
+
+printf "=========================================================================\n"
+printf "                             Backup Code\n"
+printf "=========================================================================\n"
+echo -n "Enter the website name want backup [ENTER]: "
+read website
+
+if [ -f /home/$website/public_html/index.php ]; then
+echo "Find $website in server"
+if [ -f /home/$mainsite/private_html/backup/$website/$website.tar.gz ]; then
+read -r -p "Backup file is old, delete ? [y/N] " response
+case $response in
+    [yY][eE][sS]|[yY])
+    	rm -rf /home/$mainsite/private_html/backup/$website/
+
+	backupcode
+        ;;
+    *)
+        echo "Good bye....!"
+        ;;
+esac
+else
+	backupcode
+fi
+else
+echo "Oh, not find $website"
+echo "Or $website is blank"
+echo "Good bye...!"
+exit
+fi

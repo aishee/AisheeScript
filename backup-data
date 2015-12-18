@@ -1,0 +1,46 @@
+#!/bin/bash
+
+. /etc/aisheescript/scripts.conf
+
+
+backupsql ()
+{
+echo "Backup is running $dataname..."
+mkdir -p /home/$mainsite/private_html/backup/$dataname
+cd /home/$mainsite/private_html/backup/$dataname
+mysqldump -u root -p$mariadbpass $dataname | gzip -9 > $dataname.sql.gz
+
+echo "Backup complete!"
+echo "Link file backup: /home/$mainsite/private_html/backup/$dataname/$dataname.sql.gz"
+echo "Link download: http://$mainsite:$priport/backup/$dataname/$dataname.sql.gz"
+}
+
+printf "=========================================================================\n"
+printf "                             Backup Data\n"
+printf "=========================================================================\n"
+echo -n "Enter the database name [ENTER]: "
+read dataname
+
+if [ -f /var/lib/mysql/$dataname/db.opt ]; then
+echo "Find $dataname in server"
+if [ -f /home/$mainsite/private_html/backup/$dataname/$dataname.sql.gz ]; then
+read -r -p "Find file backup database is old, delete ? [y/N] " response
+case $response in
+    [yY][eE][sS]|[yY])
+    	rm -rf /home/$mainsite/private_html/backup/$dataname
+
+	backupsql
+        ;;
+    *)
+        echo "Good bye....!"
+        ;;
+esac
+else
+	backupsql
+fi
+
+else
+echo "Not can find $dataname in server, please try again!"
+echo "Good bye...!"
+exit
+fi

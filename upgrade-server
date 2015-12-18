@@ -1,0 +1,37 @@
+#!/bin/bash
+
+. /etc/aisheescript/scripts.conf
+
+prompt="Enter the select: "
+options=("Check update" "Update Nginx" "Update PHP" "Update MariaDB")
+printf "=========================================================================\n"
+printf "                           Upgrade server\n"
+printf "=========================================================================\n"
+PS3="
+$prompt"
+select opt in "${options[@]}" "Thoat"; do
+
+    case "$REPLY" in
+    1 )
+    wget -q $script_url/update/check-update -O /etc/aisheescript/update/check-update && chmod +x /etc/aisheescript/update/check-update
+    /etc/aisheescript/update/check-update
+    ;;
+    2 )
+    wget -q $script_url/update/update-nginx -O /etc/aisheescript/update/update-nginx && chmod +x /etc/aisheescript/update/update-nginx
+    /etc/aisheescript/update/update-nginx
+    ;;
+    3 )
+    wget -q $script_url/update/update-php -O /etc/aisheescript/update/update-php && chmod +x /etc/aisheescript/update/update-php
+    /etc/aisheescript/update/update-php
+    ;;
+    4 )
+    wget -q $script_url/update/update-mariadb -O /etc/aisheescript/update/update-mariadb && chmod +x /etc/aisheescript/update/update-mariadb
+    /etc/aisheescript/update/update-mariadb
+    ;;
+
+    $(( ${#options[@]}+1 )) ) printf "\nGood bye....!\n"; break;;
+    *) echo "Failed, please the number in list";continue;;
+
+    esac
+
+done

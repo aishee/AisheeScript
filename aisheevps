@@ -1,0 +1,40 @@
+#!/bin/sh
+
+. /etc/aisheescript/scripts.conf
+
+clear
+prompt="Enter the select:"
+options=("List website" "Add website" "Delete website" "Backup code" "Backup data" "Auto backup" "Turn Off Auto backup" "Create database" "Delete database" "Change pass VPS" "Turn Off phpMyAdmin" "Add park domain" "Add redirect domain" "Permission webserver" "Upgrade server")
+
+printf "=========================================================================\n"
+printf "            Aishee Script v$aisheescript_ver - http://aishee.net/script/ \n"
+printf "=========================================================================\n"
+printf "                             VPS Menu\n"
+printf "=========================================================================\n"
+PS3="
+$prompt"
+select opt in "${options[@]}" "Exit"; do
+
+    case "$REPLY" in
+    1 ) /etc/aisheescript/menu/list-website;;
+    2 ) /etc/aisheescript/menu/craete-database;;
+    3 ) /etc/aisheescript/menu/delete-site;;
+    4 ) /etc/aisheescript/menu/backup-code;;
+    5 ) /etc/aisheescript/menu/backup-data;;
+    6 ) /etc/aisheescript/menu/autobackup;;
+    7 ) /etc/aisheescript/menu/autobackup-off;;
+    8 ) /etc/aisheescript/menu/add-site;;
+    9 ) /etc/aisheescript/menu/delete-database;;
+    10 ) /etc/aisheescript/menu/change-pass-vps;;
+    11 ) /etc/aisheescript/menu/phpmyadmin-off;;
+    12 ) /etc/aisheescript/menu/park-domain;;
+    13 ) /etc/aisheescript/menu/redirect-domain;;
+    14 ) /etc/aisheescript/menu/permission-server;;
+    15 ) /etc/aisheescript/menu/server-upgrade;;
+
+    $(( ${#options[@]}+1 )) ) printf "\nGood bye!\nUpdate new version in: http://aishee.net/\n\n"; break;;
+    *) echo "Failed, please the number correct ";continue;;
+
+    esac
+
+done
